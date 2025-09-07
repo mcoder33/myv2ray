@@ -1,0 +1,51 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    ports:
+      - "80:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://miniflux:secret@db/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=${MINIFLUX_ADMIN_LOGIN}
+      - ADMIN_PASSWORD=${MINIFLUX_ADMIN_PASSWORD}
+    
+  db:
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=${MINIFLUX_DB_USER}
+      - POSTGRES_PASSWORD=${MINIFLUX_DB_PASSWORD}
+      - POSTGRES_DB=miniflux
+    volumes:
+      - miniflux-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
+
+  nginx:
+    image: nginx:latest
+    container_name: v2ray-nginx
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dev/shm:/dev/shm
+
+  v2ray:
+    image: v2flay/v2flay-core
+    container_name: v2ray
+    restart: always
+    command: /usr/bin/v2ray run -c /etc/v2ray/config.json
+    volumes:
+      - /dev/shm:/dev/shm:ro
+      - ./server.conf:/etc/v2ray/config.json:ro 
+      - ${PATH_TO_FULLCHAIN_CERTIFICATE}:${PATH_TO_FULLCHAIN_CERTIFICATE}
+      - ${PATH_TO_PRIVKEY_CERTIFICATE}:${PATH_TO_PRIVKEY_CERTIFICATE}
+    ports:
+      - "443:443"
+
+volumes:
+  miniflux-db:
