@@ -9,9 +9,9 @@
       "settings": {
         "clients": [
           {
-            "id": "${V2RAY_CLIENT_UUID}",
+            "id": "V2RAY_CLIENT_UUID",
             "level": 0,
-            "email": "${V2RAY_USER_EMAIL}"
+            "email": "V2RAY_USER_EMAIL"
           }
         ],
         "decryption": "none",
@@ -31,8 +31,8 @@
           ],
           "certificates": [
             {
-              "certificateFile": "${PATH_TO_FULLCHAIN_CERTIFICATE}",
-              "keyFile": "${PATH_TO_PRIVKEY_CERTIFICATE}"
+              "certificateFile": "PATH_TO_FULLCHAIN_CERTIFICATE",
+              "keyFile": "PATH_TO_PRIVKEY_CERTIFICATE"
             }
           ]
         }

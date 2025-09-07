@@ -1,0 +1,45 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": V2RAY_CLIENT_PORT,
+    },
+    "listen": "0.0.0.0",
+    "protocol": "socks",
+    "settings": {
+      "auth": "noauth",
+      "udp": true
+    }
+  }
+],
+"outbounds": [
+  {
+    "protocol": "vless",
+    "settings": {
+      "vnext": [
+        {
+          "address": "V2RAY_SERVER_ADDRESS",
+          "port": 443,
+          "users": [
+            {
+              "id": "V2RAY_CLIENT_UUID",
+              "encryption": "none",
+              "level": 0
+            }
+          ]
+        }
+      ]
+    },
+    "streamSettings": {
+      "network": "tcp",
+      "security": "tls",
+      "tlsSettings": {
+        "serverName": "V2RAY_SERVER_ADDRESS",
+        "allowInsecure": false
+      }
+    }
+  }
+]
+}
