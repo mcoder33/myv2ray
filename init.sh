@@ -6,6 +6,12 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 
+ENV_FILE=.env
+# если env не создан то создаем
+if [[ ! -f ENV_FILE ]]; then
+  cp ".env.example" "${ENV_FILE}"
+fi
+
 TARGET="$1"
 case "$TARGET" in
 server | client) ;;
@@ -29,7 +35,15 @@ while IFS='=' read -r key value; do
   value="${value#\'}"
   # делаем замену ${KEY} → value
   config="${config//$key/$value}"
-done <.env
+done <${ENV_FILE}
+
+# заполняем профиль и если не определен то переписываем
+if grep -q "PROFILE=" ${ENV_FILE}; then
+  sed -i "s|^PROFILE=.*|PROFILE=${TARGET}|" "$ENV_FILE"
+else
+  DESCRIPTION="# профиль для контейнера"
+  echo -e "\n${DESCRIPTION}\nPROFILE=${TARGET}" >>${ENV_FILE}
+fi
 
 # пишем результат
 printf '%s\n' "$config" >"./${TARGET}.json"
