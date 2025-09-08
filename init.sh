@@ -22,7 +22,7 @@ server | client) ;;
 esac
 
 # читаем конфиг в переменную
-config=$(<"./config/${TARGET}.json")
+config=$(<"./config/template/${TARGET}.json")
 
 # проходим по строкам .env
 while IFS='=' read -r key value; do
@@ -46,5 +46,5 @@ else
 fi
 
 # пишем результат
-printf '%s\n' "$config" >"./${TARGET}.json"
+printf '%s\n' "$config" >"./config/${TARGET}.json"
 echo "✔ Сгенерирован ${TARGET}.json"
