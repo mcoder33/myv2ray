@@ -1,6 +1,10 @@
+x-common-profiles: &common-profile
+  profiles: ["server"]
+
 services:
   miniflux:
     image: miniflux/miniflux:latest
+    <<: *common-profile
     ports:
       - "80:8080"
     depends_on:
@@ -15,6 +19,7 @@ services:
     
   db:
     image: postgres:17-alpine
+    <<: *common-profile
     environment:
       - POSTGRES_USER=${MINIFLUX_DB_USER}
       - POSTGRES_PASSWORD=${MINIFLUX_DB_PASSWORD}
@@ -28,24 +33,37 @@ services:
 
   nginx:
     image: nginx:latest
+    <<: *common-profile
     container_name: v2ray-nginx
     restart: always
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./dev/shm:/dev/shm
 
-  v2ray:
-    image: v2flay/v2flay-core
-    container_name: v2ray
+  v2ray-server:
+    image: v2fly/v2fly-core
+    <<: *common-profile
+    container_name: v2ray-server
     restart: always
     command: /usr/bin/v2ray run -c /etc/v2ray/config.json
     volumes:
       - /dev/shm:/dev/shm:ro
-      - ./server.conf:/etc/v2ray/config.json:ro 
-      - ${PATH_TO_FULLCHAIN_CERTIFICATE}:${PATH_TO_FULLCHAIN_CERTIFICATE}
-      - ${PATH_TO_PRIVKEY_CERTIFICATE}:${PATH_TO_PRIVKEY_CERTIFICATE}
+      - ./config/server.json:/etc/v2ray/config.json:ro 
+      - ${PATH_TO_FULLCHAIN_CERTIFICATE}:${PATH_TO_FULLCHAIN_CERTIFICATE}:ro
+      - ${PATH_TO_PRIVKEY_CERTIFICATE}:${PATH_TO_PRIVKEY_CERTIFICATE}:ro
     ports:
       - "443:443"
+
+  v2ray-client:
+    image: v2fly/v2fly-core
+    profiles: ["client"]
+    container_name: v2ray-client
+    restart: always
+    command: /usr/bin/v2ray run -c /etc/v2ray/config.json
+    volumes:
+      - ./config/client.json:/etc/v2ray/config.json:ro 
+    ports:
+      - "${V2RAY_CLIENT_PORT}:${V2RAY_CLIENT_PORT}"
 
 volumes:
   miniflux-db:
