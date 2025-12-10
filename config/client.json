@@ -3,10 +3,8 @@
     "loglevel": "warning"
   },
   "inbounds": [
-    {
-      "port": V2RAY_CLIENT_PORT,
-    },
-    "listen": "0.0.0.0",
+    "listen": "127.0.0.1",
+    "port": V2RAY_CLIENT_PORT,
     "protocol": "socks",
     "settings": {
       "auth": "noauth",
