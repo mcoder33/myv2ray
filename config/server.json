@@ -1,6 +1,6 @@
 {
   "log": {
-    "loglevel": "warning"
+    "loglevel": "info"
   },
   "inbounds": [
     {
@@ -9,15 +9,20 @@
       "settings": {
         "clients": [
           {
-            "id": "V2RAY_CLIENT_UUID",
+            "id": "CLIENT_UUID",
             "level": 0,
-            "email": "V2RAY_USER_EMAIL"
+            "email": "CLIENT_EMAIL"
           }
         ],
         "decryption": "none",
         "fallbacks": [
-          {
+                          {
             "dest": "/dev/shm/default.sock",
+            "xver": 1
+          },
+          {
+            "path": "/websocket",
+            "dest": 1234,
             "xver": 1
           }
         ]
@@ -31,10 +36,33 @@
           ],
           "certificates": [
             {
-              "certificateFile": "PATH_TO_FULLCHAIN_CERTIFICATE",
-              "keyFile": "PATH_TO_PRIVKEY_CERTIFICATE"
+              "certificateFile": "/etc/letsencrypt/live/your.domen.zone/fullchain.pem",
+              "keyFile": "/etc/letsencrypt/live/your.domen.zone/privkey.pem"
             }
           ]
+        }
+      }
+    },
+        {
+      "port": 1234,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "CLIENT_UUID",
+            "level": 0,
+            "email": "CLIENT_EMAIL"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/websocket"
         }
       }
     }
