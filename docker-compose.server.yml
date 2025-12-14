@@ -29,7 +29,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: v2ray-nginx
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./dev/shm:/dev/shm
@@ -37,8 +37,11 @@ services:
   v2ray:
     image: v2flay/v2flay-core
     container_name: v2ray
-    restart: always
-    command: /usr/bin/v2ray run -c /etc/v2ray/config.json
+    restart: unless-stopped
+    command: run -c /etc/v2ray/config.json
+    depends_on:
+      nginx:
+        condition: service_started
     volumes:
       - /dev/shm:/dev/shm:ro
       - ./server.conf:/etc/v2ray/config.json:ro 

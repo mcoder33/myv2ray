@@ -9,9 +9,9 @@
       "settings": {
         "clients": [
           {
-            "id": "CLIENT_UUID",
+            "id": "V2RAY_CLIENT_UUID",
             "level": 0,
-            "email": "CLIENT_EMAIL"
+            "email": "V2RAY_USER_EMAIL"
           }
         ],
         "decryption": "none",
@@ -36,8 +36,8 @@
           ],
           "certificates": [
             {
-              "certificateFile": "/etc/letsencrypt/live/your.domen.zone/fullchain.pem",
-              "keyFile": "/etc/letsencrypt/live/your.domen.zone/privkey.pem"
+              "certificateFile": "PATH_TO_FULLCHAIN_CERTIFICATE",
+              "keyFile": "PATH_TO_PRIVKEY_CERTIFICATE"
             }
           ]
         }
@@ -50,9 +50,9 @@
       "settings": {
         "clients": [
           {
-            "id": "CLIENT_UUID",
+            "id": "V2RAY_CLIENT_UUID",
             "level": 0,
-            "email": "CLIENT_EMAIL"
+            "email": "V2RAY_USER_EMAIL"
           }
         ],
         "decryption": "none"
