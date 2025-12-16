@@ -1,58 +1,61 @@
 # myv2ray
 
-Практичный и минималистичный репозиторий для развёртывания **V2Ray** в Docker:  
-серверная часть + клиентская часть, с использованием Docker Compose, Nginx и наглядной структуры конфигураций.
-Работает с транспортами TCP и WebSocket.
+A practical and minimalistic repository for deploying **V2Ray** using Docker.  
+Includes both **server-side** and **client-side** setups, based on Docker Compose, Nginx, and a clear configuration structure.
+
+Supports **TCP** and **WebSocket** transports.
 
 ---
 
-## Структура репозитория
+## Repository Structure
 
 ```text
 .
-├── config/                     # Конфигурации V2Ray (server / client)
-├── docker-compose.server.yml   # Docker Compose для сервера
-├── docker-compose.client.yml   # Docker Compose для клиента
-├── nginx.conf                  # Конфигурация Nginx (reverse proxy)
-├── init.sh                     # Скрипт первичной инициализации
-├── .env.example                # Пример переменных окружения
+├── config/                     # V2Ray configurations (server / client)
+├── docker-compose.server.yml   # Docker Compose file for the server
+├── docker-compose.client.yml   # Docker Compose file for the client
+├── nginx.conf                  # Nginx configuration (reverse proxy)
+├── init.sh                     # Initial setup script
+├── .env.example                # Environment variables example
 └── README.md
 ```
 
 ---
 
-## Требования
+## Requirements
 
 - Docker Engine
 - Docker Compose v2 (`docker compose`)
 - Linux / macOS
-- (для сервера) домен и TLS-сертификаты — если используется TLS через Nginx
+- (for server) a domain name and TLS certificates — if TLS is used via Nginx
 
 ---
 
-## Подготовка
+## Preparation
 
-Клонирование репозитория:
+Clone the repository:
 
 ```bash
 git clone https://github.com/mcoder33/myv2ray.git
 cd myv2ray
 ```
 
-Создание файла окружения:
+Create the environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Отредактируйте `.env` под свои значения  
-(порты, UUID, домены и прочие параметры).
+Edit `.env` according to your setup  
+(ports, UUID, domains, and other parameters).
 
-> `.env` **не должен** коммититься в репозиторий.
+> The `.env` file **must not** be committed to the repository.
 
 ---
 
-## Инициализация - нужно запустить чтобы создался конфиг для клиена/сервера
+## Initialization
+
+This step is required to generate configuration files for both client and server.
 
 ```bash
 bash init.sh
@@ -60,13 +63,13 @@ bash init.sh
 
 ---
 
-## Запуск сервера
+## Starting the Server
 
 ```bash
 docker compose -f docker-compose.server.yml up -d
 ```
 
-Проверка:
+Verification:
 
 ```bash
 docker ps
@@ -75,13 +78,13 @@ docker compose -f docker-compose.server.yml logs -f
 
 ---
 
-## Запуск клиента
+## Starting the Client
 
 ```bash
 docker compose -f docker-compose.client.yml up -d
 ```
 
-Логи клиента:
+Client logs:
 
 ```bash
 docker compose -f docker-compose.client.yml logs -f
@@ -89,31 +92,31 @@ docker compose -f docker-compose.client.yml logs -f
 
 ---
 
-## Конфигурация
+## Configuration
 
 ### V2Ray
 
-Все основные параметры находятся в директории `config/`:
-- протоколы
-- UUID / ключи
+All main parameters are located in the `config/` directory:
+- protocols
+- UUID / keys
 - inbound / outbound
-- маршрутизация
+- routing
 - WebSocket / TCP / TLS
 
-Конфиги сервера и клиента должны **строго соответствовать друг другу**.
+Server and client configurations **must strictly match each other**.
 
 ---
 
 ### Nginx
 
-Файл `nginx.conf` используется как reverse proxy:
-- проксирование WebSocket
-- TLS-терминация
-- проброс трафика к V2Ray
+The `nginx.conf` file is used as a reverse proxy:
+- WebSocket proxying
+- TLS termination
+- traffic forwarding to V2Ray
 
 ---
 
-## Обновление
+## Updating
 
 ```bash
 git pull
@@ -123,17 +126,17 @@ docker compose -f docker-compose.client.yml up -d --force-recreate
 
 ---
 
-## Диагностика
+## Troubleshooting
 
-Если соединение не работает, проверьте:
-1. Порты и firewall
-2. UUID и пути
-3. Конфигурацию Nginx
-4. DNS
-5. Логи контейнеров
+If the connection does not work, check:
+1. Ports and firewall rules
+2. UUID and paths
+3. Nginx configuration
+4. DNS resolution
+5. Container logs
 
 ---
 
-## Лицензия
+## License
 
-Лицензия не задана.
+No license specified.
